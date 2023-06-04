@@ -1,14 +1,9 @@
-const mongoose = require("mongoose")
 import Note from "../../../../model/Note"
 import { redirect } from "next/navigation"
+import dbConnect from "@/app/dbConnect"
 
 export default async function Edit({params}){
-
-    await mongoose
-    .connect("mongodb://127.0.0.1:27017/NextJS13_4", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    dbConnect()
     const notes = await Note.findOne({_id: params.id})
 
     async function updateNote(data){
@@ -22,8 +17,6 @@ export default async function Edit({params}){
     return(
         <main className="m-10 space-y-5">
         <h1 className="text-xl font-bold">Edit Note</h1>
-        <p>Title: {notes.title}</p>
-        <p>Note: {notes.note}</p>
         <form action={updateNote}>
           <div>
             <label className="text-lg ">Title</label>
@@ -32,6 +25,7 @@ export default async function Edit({params}){
               type="text"
               name="title"
               className="w-[100%] md:w-[50%] bg-slate-200 h-10 p-3"
+              defaultValue={notes?.title}
             />
           </div>
           <div>
@@ -42,6 +36,7 @@ export default async function Edit({params}){
               name="note"
               rows="3"
               className="w-[100%] md:w-[50%] bg-slate-200 p-3"
+              defaultValue={notes?.note}
             ></textarea>
           </div>
           <button

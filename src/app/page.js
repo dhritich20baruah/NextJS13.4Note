@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
 import Note from "../../model/Note";
 import { redirect } from "next/navigation";
+import dbConnect from "./dbConnect";
 
 export default function Home() {
   async function newNote(data) {
@@ -9,13 +9,7 @@ export default function Home() {
     let note = data.get("note")?.valueOf();
 
     try {
-      await mongoose
-        .connect("mongodb://127.0.0.1:27017/NextJS13_4", {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        })
-        .then(() => console.log("DB connected"));
-
+      dbConnect()
       let newNote = new Note({ title, note });
       await newNote.save();
       console.log(newNote);
